@@ -706,7 +706,256 @@ console.log(stringArray) // returns ["h", "e", "l", "l", "o"]
 
 // Speads can also be used with objects 
 
+// Originally we used object.assign to copy an object
+// but with spreads we can also accomplish the same thing
 
+const originalObject = {
+    powerMode: on,
+    enabled: true
+}
+
+const secondObject = { ...originalObject}
+
+// the above code uses spread to copy a object
+
+// however if you have an object nested in the object then that also has to be spread
+// or else you'll overwrite the existing field
+
+// you can also use spreads on parameters in a function call
+
+multiply(1,2,3);
+
+const numbers = [1,2,3];
+multiply(...numbers);
+
+// the above uses spread to utilize an array to use for the parameters
+
+
+// rest parameters are used to gather arguments in functions into an array
+
+function restTest(one, two, ...args){
+  console.log(one);
+  console.log(two);
+  console.log(args);
+}
+
+restTest(1,2,3,4,5);
+// will print 1, 2, [3,4,5]
+
+
+
+
+
+// UNDERSTANDING ARROW FUNCTIONS
+
+
+// function expressions are usually assigned to a variable and can be anonymous
+
+const sum = function (a, b) {
+  return a + b;
+}
+
+// the above code defines a const sum to a reference of a anonymous function
+
+// you can name functions using the function keyword but it's not common practice
+
+// the arrow function syntax is
+
+const arrowsum = (a,b) => {
+  return a + b;
+}
+
+// arrow functions are always anonymous
+
+// the keyword this that scopes a variable by assuming you're referring to the surrounding
+// scope
+
+// you can bind the this keyword to ensure it's targeting what you want
+
+// arrow functions are great for parameter functions but are not ideal for object methods
+// better to use normal functions in objects as the scope for the keyword this
+// will not work properly with arrow functions
+
+// arrow functions also cannot use constructors or the prototype property
+// arrow functions also have convenient syntax for one line functions
+
+// such as:
+const lineSum = (a,b) => a + b;
+
+// you can also omit the parenthesis if its only one variable
+
+
+
+
+
+
+
+// UNDERSTANDING THE EVENT LOOPS, CALLBACKS, ASYNC/AWAIT in JS
+
+// Javascript is a synchronous execution which means it goes one at a time
+// therefore "blocking" can occur if something takes time to load
+
+// you can use the setTimeout function to simuluate asynchronous execution
+// setTimeout takes two parameters, the function and the amount of time to wait
+
+// Javascript also uses a similar stack and queue to Java
+
+// setTimeout pauses the method call from going to the queue until the alloted time passes
+
+// callback functions are not asynchronous
+
+// you can use the promise keyword to represent the completion of asyrnchrnous functions
+// promises can be chained and don't need to be nested leading to cleaner code
+
+const promise = new Promise((resolve,reject) => {});
+// ^ makes a new promise
+
+// a promise has 3 states, pending, fufilled and rejected 
+// most developers mainly consume and use promises from apis, rather than make them
+
+function getUsers(onSuccess) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      // Handle resolve and reject in the asynchronous API
+      if (onSuccess) {
+        resolve([
+          {id: 1, name: 'Jerry'},
+          {id: 2, name: 'Elaine'},
+          {id: 3, name: 'George'},
+        ])
+      } else {
+        reject('Failed to fetch data!')
+      }
+    }, 1000)
+  })
+}
+
+// In the example above, we can see if it passes, it will return data after the timeout asynchronous
+// however if it fails...
+
+// Run the getUsers function with the false flag to trigger an error
+getUsers(false)
+  .then((response) => {
+    console.log(response)
+  })
+  .catch((error) => {
+    console.error(error)
+  })
+
+  // then it skips the .then and goes to the catch the returns the error "failed to fetch data"
+
+  
+// Method	            Description
+// then()	            Handles a resolve. Returns a promise, and calls onFulfilled function asynchronously
+// catch()	          Handles a reject. Returns a promise, and calls onRejected function asynchronously
+// finally()	        Called when a promise is settled. Returns a promise, and calls onFinally function asynchronously
+
+
+// Fetch a user from the GitHub API
+fetch('https://api.github.com/users/octocat')
+  .then((response) => {
+    return response.json()
+  })
+  .then((data) => {
+    console.log(data)
+  })
+  .catch((error) => {
+    console.error(error)
+  })
+
+  // in the above practical example, we attempt to fetch a users data, if it suceeds and goes to the .then, it will
+  // return the response and then log it and if it fails, it will log the error
+
+  // You can also use the async function which just uses promises under the hood
+
+  // Handling success and errors with async/await
+async function getUser() {
+  try {
+    // Handle success in try
+    const response = await fetch('https://api.github.com/users/octocat')
+    const data = await response.json()
+
+    console.log(data)
+  } catch (error) {
+    // Handle error in catch
+    console.error(error)
+  }
+}
+
+// in the above example we can see some similarites with the promises example, if it suceeds the try it will fetch
+// and then convert the data before logging it, while if it fails it will log the error. You can view the await function
+// as it means it will wait until the hidden promise fails to suceeds.
+
+
+
+
+
+
+
+// HOW TO USE THE ARRAY METHODS IN JAVASCRIPT: ITERATION METHODS
+
+
+
+// the for-each method is used on arrays on each item in the array 
+
+let fish = [ "piranha", "barracuda", "cod", "eel" ];
+
+// Print out each item in the array
+fish.forEach(individualFish => {
+	console.log(individualFish);
+})
+
+// the above code prints out the list of items in the fish array
+
+// there is also a for-loop that can accomplish the same thing, though the forEach is more concise and preferred
+
+// Loop through the length of the array
+for (let i = 0; i < fish.length; i++) {
+	console.log(fish[i]);
+}
+// the map function creates a new array based on the orignal array and the results of a function
+
+// Pluralize all items in the fish array
+let pluralFish = fish.map(individualFish => {
+	return `${individualFish}s`;
+});
+
+pluralFish;
+
+// the above example makes a new array of fish and add's an s to to end of every item
+
+// the filter method makes a new array based on a orignal array and a filter
+
+let newSeaCreatures = [ "shark", "whale", "squid", "starfish", "narwhal" ];
+
+// Filter all creatures that start with "s" into a new list
+let filteredList = newSeaCreatures.filter(creature => {
+  return creature[0] === "s";
+});
+
+filteredList;
+
+// the reduce method reduces an entire array to one element mainly used with numbers
+
+
+// Get the sum of all numerical values
+let newSum = numbers.reduce((a, b) => {
+	return a + b;
+});
+
+sum;
+// the example adds up all of the numbers in the numbers array to one element
+
+// the find method reduces an array to the first element that passes the intial filter
+
+// Check if a given value is a cephalopod
+const isCephalopod = cephalopod => {
+	return [ "cuttlefish", "octopus" ].includes(cephalopod);
+}
+
+seaCreatures.find(isCephalopod);
+
+// the findIndex is idential to the find method but returns the index instead
 
 
 
